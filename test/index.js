@@ -12,8 +12,9 @@ describe('SerialSubscription', function() {
     let d1Dead = false;
     let d1 = new Subscription(() => d1Dead = true);
     
+    // Subscriptions can also be just Functions
     let d2Dead = false;
-    let d2 = new Subscription(() => d2Dead = true);
+    let d2 = () => d2Dead = true;
     
     expect(d1Dead).not.to.be.ok;
     expect(d2Dead).not.to.be.ok;
