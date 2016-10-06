@@ -1,3 +1,5 @@
+import './support';
+
 import {Subscription} from 'rxjs';
 import SerialSubscription from '../src/index';
 
