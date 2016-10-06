@@ -7,59 +7,75 @@ describe('SerialSubscription', function() {
   beforeEach(function() {
     this.fixture = new SerialSubscription();
   });
-  
+
   it('should dispose new items when you add them', function() {
     let d1Dead = false;
     let d1 = new Subscription(() => d1Dead = true);
-    
+
     // Subscriptions can also be just Functions
     let d2Dead = false;
     let d2 = () => d2Dead = true;
-    
+
     expect(d1Dead).not.to.be.ok;
     expect(d2Dead).not.to.be.ok;
-    
+
     this.fixture.add(d1);
-    
+
     expect(d1Dead).not.to.be.ok;
     expect(d2Dead).not.to.be.ok;
-    
+
     this.fixture.add(d2);
-    
+
     expect(d1Dead).to.be.ok;
     expect(d2Dead).not.to.be.ok;
-    
+
     this.fixture.add(Subscription.EMPTY);
-    
+
     expect(d1Dead).to.be.ok;
     expect(d2Dead).to.be.ok;
   });
-  
+
+  it('should always hold currentsubscription as subscription', function () {
+    this.fixture.add(() => true);
+
+    expect(this.fixture._currentSubscription.unsubscribe).to.be.defined;
+
+    this.fixture.add(() => 'not a subscription');
+
+    expect(this.fixture._currentSubscription.unsubscribe).to.be.defined;
+
+    let d2Dead = false;
+    let d2 = () => d2Dead = true;
+    this.fixture.add(d2);
+
+    expect(this.fixture._currentSubscription.unsubscribe).to.be.defined;
+  });
+
   it('should dispose when you call unsubscribe', function() {
     let d1Dead = false;
     let d1 = new Subscription(() => d1Dead = true);
-    
+
     let d2Dead = false;
-    let d2 = new Subscription(() => d2Dead = true);  
-      
+    let d2 = new Subscription(() => d2Dead = true);
+
     expect(d1Dead).not.to.be.ok;
     expect(d2Dead).not.to.be.ok;
-    
+
     this.fixture.add(d1);
     this.fixture.unsubscribe();
-          
+
     expect(d1Dead).to.be.ok;
     expect(d2Dead).not.to.be.ok;
-    
+
     // This should do nothing, we're already unsubscribed
     this.fixture.add(d2);
-            
+
     expect(d1Dead).to.be.ok;
     expect(d2Dead).not.to.be.ok;
-      
+
     // This should do nothing, we're already unsubscribed
     this.fixture.unsubscribe();
-                
+
     expect(d1Dead).to.be.ok;
     expect(d2Dead).not.to.be.ok;
   });

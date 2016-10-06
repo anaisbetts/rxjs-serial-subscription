@@ -35,7 +35,6 @@ export default class SerialSubscription extends Subscription {
    */
   add(teardown) {
     if (this.closed) return;
-    if (typeof(teardown) === 'function') teardown = new Subscription(teardown);
 
     if (this._currentSubscription) {
       this.remove(this._currentSubscription);
@@ -43,6 +42,6 @@ export default class SerialSubscription extends Subscription {
       this._currentSubscription = null;
     }
 
-    super.add(this._currentSubscription = teardown);
+    this._currentSubscription = super.add(teardown);
   }
 }
