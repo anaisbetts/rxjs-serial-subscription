@@ -1,6 +1,6 @@
 {
   "name": "rxjs-serial-subscription",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A port of RxJS 4.x's SerialSubscription to RxJS 5.x",
   "scripts": {
     "doc": "esdoc -c ./esdoc.json",
