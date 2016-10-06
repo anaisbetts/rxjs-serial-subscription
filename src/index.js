@@ -16,7 +16,7 @@ import {Subscription} from 'rxjs/Subscription';
 export default class SerialSubscription extends Subscription {
   constructor() {
     super();
-    this._currentSubscription = null;
+    this._currentSubscription = Subscription.EMPTY;
   }
 
   /**
