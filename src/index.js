@@ -1,5 +1,3 @@
-import './support';
-
 import {Subscription} from 'rxjs/Subscription';
 
 /**
