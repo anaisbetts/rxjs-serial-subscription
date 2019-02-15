@@ -1,4 +1,4 @@
-import {Subscription} from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 /**
  * @export
@@ -13,13 +13,13 @@ import {Subscription} from 'rxjs/Subscription';
  * existing codebases.
  * @extends {Subscription}
  */
-export default class SerialSubscription extends Subscription {
-  constructor() {
-    super();
-    this._currentSubscription = Subscription.EMPTY;
-  }
+export class SerializableSubscription extends Subscription {
+	constructor() {
+		super();
+		this._currentSubscription = Subscription.EMPTY;
+	}
 
-  /**
+	/**
    * Adds a tear down to be called during the unsubscribe() of this
    * Subscription.
    *
@@ -33,16 +33,16 @@ export default class SerialSubscription extends Subscription {
    * `remove()` to remove the passed teardown logic from the inner subscriptions
    * list.
    */
-  add(teardown) {
-    if (this.closed) return;
-    if (typeof(teardown) === 'function') teardown = new Subscription(teardown);
+	serialize(teardown) {
+		if (this.closed) return;
+		if (typeof teardown === 'function') teardown = new Subscription(teardown);
 
-    if (this._currentSubscription) {
-      this.remove(this._currentSubscription);
-      this._currentSubscription.unsubscribe();
-      this._currentSubscription = null;
-    }
+		if (this._currentSubscription) {
+			this.remove(this._currentSubscription);
+			this._currentSubscription.unsubscribe();
+			this._currentSubscription = null;
+		}
 
-    super.add(this._currentSubscription = teardown);
-  }
+		super.add((this._currentSubscription = teardown));
+	}
 }
